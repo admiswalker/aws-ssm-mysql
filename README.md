@@ -14,15 +14,20 @@ npx cdk deploy
 
 ### local port forwarding
 1. install `AWS CLI 2`
-   See [Installing or updating the latest version of the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+   1. See [Installing or updating the latest version of the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html), and install AWS CLI vewsion 2.
+   2. Set below text to  `~/.aws/config`
+      ```
+      [default]
+      region = ap-northeast-1
+      ```
 2. install `Session Manager Plugin`
-   See [(Optional) Install the Session Manager plugin for the AWS CLI](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html)
-3. add blow settings to `~/.ssh/config`.
-   ```
-   # SSH over Session Manager
-   host i-* mi-*
-   	ProxyCommand sh -c "aws ssm start-session --target %h --document-name AWS-StartSSHSession --parameters 'portNumber=%p'"
-   ```
+   1. See [(Optional) Install the Session Manager plugin for the AWS CLI](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html), and install Session Manager Plugin.
+   2. add blow settings to `~/.ssh/config`.
+      ```
+      # SSH over Session Manager
+      host i-* mi-*
+      	ProxyCommand sh -c "aws ssm start-session --target %h --document-name AWS-StartSSHSession --parameters 'portNumber=%p'"
+      ```
 
 4. ssh port forwarding
    ```

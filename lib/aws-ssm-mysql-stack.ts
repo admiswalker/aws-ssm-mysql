@@ -86,3 +86,5 @@ export class AwsSsmMysqlStack extends cdk.Stack {
 
 // memo:
 // - [セッションマネージャー over SSH 経由でプライベートサブネット内のRDSへ接続する方法](https://qiita.com/syoimin/items/eb6d4d9e01f460623531)
+// - [AWS CDKでRDSのパスワードを自動生成してコード内で利用する](https://dev.classmethod.jp/articles/automatically-generate-a-password-with-cdk/)
+

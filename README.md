@@ -13,6 +13,16 @@ npx cdk deploy
 4. See `password`
 
 ### local port forwarding
+1. install `Session Manager Plugin`
+   [(Optional) Install the Session Manager plugin for the AWS CLI](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html)
+2. add blow settings to `~/.ssh/config`.
+```
+# SSH over Session Manager
+host i-* mi-*
+	ProxyCommand sh -c "aws ssm start-session --target %h --document-name AWS-StartSSHSession --parameters 'portNumber=%p'"
+```
+
+3. ssh port forwarding
 ```
 EC2_INSTANCE_ID=$(aws ec2 describe-instances \
     --filters "Name=tag:Name,Values=EC2SSM/ec2_ssm" \

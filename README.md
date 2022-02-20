@@ -25,7 +25,7 @@ host i-* mi-*
 3. ssh port forwarding
 ```
 EC2_INSTANCE_ID=$(aws ec2 describe-instances \
-    --filters "Name=tag:Name,Values=EC2SSM/ec2_ssm" \
+    --filters "Name=tag:Name,Values=AwsSsmMysqlStack/ec2_ssm" \
     --query "Reservations[].Instances[?State.Name=='running'].InstanceId[]" \
     --output text)
 ssh -i ~/.ssh/ec2/id_ed25519 admis@$EC2_INSTANCE_ID -L 3306:localhost:3306

@@ -66,18 +66,8 @@ export class AwsSsmMysqlStack extends cdk.Stack {
       }),
       role: ssm_iam_role,
       userData: multipartUserData,
-//      securityGroup: mysql_sg,
     });
     
-    /*
-    const security_group = new ec2.CfnSecurityGroup(
-      this,
-      securityGroupId: 'ExampleSecurityGroup',
-      securityGroupVpcId: vpc,
-      security_group_name='example-security-group',
-    )
-    */
-
     const mysql_sg = new ec2.SecurityGroup(this, 'MySQLsg', {
       vpc: vpc,
       allowAllOutbound: true,
@@ -98,39 +88,11 @@ export class AwsSsmMysqlStack extends cdk.Stack {
       }),
       securityGroups: [mysql_sg],
     });
-    /*
-    new rds.OptionGroup(this, 'Options', {
-      engine: rds.DatabaseInstanceEngine.oracleSe2({
-	version: rds.OracleEngineVersion.VER_19,
-      }),
-      configurations: [
-	{
-	  name: 'MySQL',
-	  port: 3306,
-	  vpc,
-	  securityGroups: [ec2.SecurityGroup], // Optional - a default group will be created if not provided.
-	},
-      ],
-    });
-    */
-    
-    // 残り：下記を参考に EC2 のセキュリティグループを作成する．
-    // https://dev.classmethod.jp/articles/sales-rds-ec2-session/
-    //
-    // - インバウンドルール
-    //   - タイプ: MYSQL/Aurora
-    //   - プロトコル: TCP
-    //   - ポート範囲: 3306
-    //   - ソース: カスタム, AwsSsmMysqlStack/ec2_ssm (sg-xxxxxxxxxxxxxxxxxx)
-    
-    //
   }
 }
-
 
 // memo:
 // - [セッションマネージャー over SSH 経由でプライベートサブネット内のRDSへ接続する方法](https://qiita.com/syoimin/items/eb6d4d9e01f460623531)
 // - [AWS CDKでRDSのパスワードを自動生成してコード内で利用する](https://dev.classmethod.jp/articles/automatically-generate-a-password-with-cdk/)
 // - [Amazon EC2 でウェブアプリケーションをデプロイする](https://aws.amazon.com/jp/getting-started/guides/deploy-webapp-ec2/module-one/)
-
 

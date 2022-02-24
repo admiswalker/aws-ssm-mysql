@@ -35,7 +35,8 @@ npx cdk deploy
        --filters "Name=tag:Name,Values=AwsSsmMysqlStack/ec2_ssm" \
        --query "Reservations[].Instances[?State.Name=='running'].InstanceId[]" \
        --output text)
-   ssh -i ~/.ssh/ec2/id_ed25519 admis@$EC2_INSTANCE_ID -L 3306:xxxxxxxx.xxxxxxxx.ap-northeast-1.rds.amazonaws.com:3306
+   RDB_ENDPOINT=$(aws rds describe-db-instances | jq '.DBInstances[] | [.Endpoint, .TagList, .Key == "AwsSsmMysqlStack" ]' | grep "Address" | cut -d '"' -f 4)
+   ssh -i ~/.ssh/ec2/id_ed25519 admis@$EC2_INSTANCE_ID -L 3306:$RDB_ENDPOINT:3306
    ```
 
 ### install [MySQL Workbench](https://www.mysql.com/jp/products/workbench/)

@@ -76,7 +76,7 @@ export class AwsSsmMysqlStack extends cdk.Stack {
       ec2.Peer.ipv4(vpc.vpcCidrBlock),
       ec2.Port.tcp(3306),
     );
-    const db_instance = new rds.DatabaseInstance(this, 'Instance', {
+    const db_instance = new rds.DatabaseInstance(this, 'MySQLInstance', {
       //engine: rds.DatabaseInstanceEngine.mysql({ version: rds.MysqlEngineVersion.VER_8_0_19 }),
       engine: rds.DatabaseInstanceEngine.mysql({ version: rds.MysqlEngineVersion.VER_5_7_34 }),
       // optional, defaults to m5.large

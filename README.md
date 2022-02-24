@@ -55,7 +55,7 @@ npx cdk deploy
 ### connection test
 run below SQL
 ```SQL
-show databses;
+show databases;
 ```
 
 ## memo

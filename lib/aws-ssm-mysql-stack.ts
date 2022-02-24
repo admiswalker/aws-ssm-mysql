@@ -66,7 +66,9 @@ export class AwsSsmMysqlStack extends cdk.Stack {
       }),
       role: ssm_iam_role,
       userData: multipartUserData,
+//      securityGroup: mysql_sg,
     });
+    
     /*
     const security_group = new ec2.CfnSecurityGroup(
       this,
@@ -76,6 +78,14 @@ export class AwsSsmMysqlStack extends cdk.Stack {
     )
     */
 
+    const mysql_sg = new ec2.SecurityGroup(this, 'MySQLsg', {
+      vpc: vpc,
+      allowAllOutbound: true,
+    });
+    mysql_sg.addIngressRule(
+      ec2.Peer.ipv4(vpc.vpcCidrBlock),
+      ec2.Port.tcp(3306),
+    );
     const db_instance = new rds.DatabaseInstance(this, 'Instance', {
       //engine: rds.DatabaseInstanceEngine.mysql({ version: rds.MysqlEngineVersion.VER_8_0_19 }),
       engine: rds.DatabaseInstanceEngine.mysql({ version: rds.MysqlEngineVersion.VER_5_7_34 }),
@@ -86,6 +96,7 @@ export class AwsSsmMysqlStack extends cdk.Stack {
       vpcSubnets: vpc.selectSubnets({
         subnetGroupName: "Private",
       }),
+      securityGroups: [mysql_sg],
     });
     /*
     new rds.OptionGroup(this, 'Options', {
@@ -102,15 +113,6 @@ export class AwsSsmMysqlStack extends cdk.Stack {
       ],
     });
     */
-    
-    const mysql_sg = new ec2.SecurityGroup(this, 'MySQL_sg', {
-      vpc: vpc,
-      allowAllOutbound: true,
-    });
-    mysql_sg.addIngressRule(
-      ec2.Peer.ipv4(vpc.vpcCidrBlock),
-      ec2.Port.tcp(3306),
-    );
     
     // 残り：下記を参考に EC2 のセキュリティグループを作成する．
     // https://dev.classmethod.jp/articles/sales-rds-ec2-session/
@@ -129,4 +131,6 @@ export class AwsSsmMysqlStack extends cdk.Stack {
 // memo:
 // - [セッションマネージャー over SSH 経由でプライベートサブネット内のRDSへ接続する方法](https://qiita.com/syoimin/items/eb6d4d9e01f460623531)
 // - [AWS CDKでRDSのパスワードを自動生成してコード内で利用する](https://dev.classmethod.jp/articles/automatically-generate-a-password-with-cdk/)
+// - [Amazon EC2 でウェブアプリケーションをデプロイする](https://aws.amazon.com/jp/getting-started/guides/deploy-webapp-ec2/module-one/)
+
 

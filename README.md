@@ -52,6 +52,12 @@ npx cdk deploy
    - Password: <see `get DB password` section> (click `Store in Keychain...` and save)
 
 
+### connection test
+run below SQL
+```SQL
+show databses;
+```
+
 ## memo
 ### init project
 ```

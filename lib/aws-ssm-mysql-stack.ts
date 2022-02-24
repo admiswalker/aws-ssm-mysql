@@ -4,6 +4,7 @@ import * as iam from '@aws-cdk/aws-iam';
 import * as fs from 'fs';
 import * as rds from '@aws-cdk/aws-rds';
 
+
 export class AwsSsmMysqlStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -66,6 +67,14 @@ export class AwsSsmMysqlStack extends cdk.Stack {
       role: ssm_iam_role,
       userData: multipartUserData,
     });
+    /*
+    const security_group = new ec2.CfnSecurityGroup(
+      this,
+      securityGroupId: 'ExampleSecurityGroup',
+      securityGroupVpcId: vpc,
+      security_group_name='example-security-group',
+    )
+    */
 
     const db_instance = new rds.DatabaseInstance(this, 'Instance', {
       //engine: rds.DatabaseInstanceEngine.mysql({ version: rds.MysqlEngineVersion.VER_8_0_19 }),
@@ -78,6 +87,39 @@ export class AwsSsmMysqlStack extends cdk.Stack {
         subnetGroupName: "Private",
       }),
     });
+    /*
+    new rds.OptionGroup(this, 'Options', {
+      engine: rds.DatabaseInstanceEngine.oracleSe2({
+	version: rds.OracleEngineVersion.VER_19,
+      }),
+      configurations: [
+	{
+	  name: 'MySQL',
+	  port: 3306,
+	  vpc,
+	  securityGroups: [ec2.SecurityGroup], // Optional - a default group will be created if not provided.
+	},
+      ],
+    });
+    */
+    
+    const mysql_sg = new ec2.SecurityGroup(this, 'MySQL_sg', {
+      vpc: vpc,
+      allowAllOutbound: true,
+    });
+    mysql_sg.addIngressRule(
+      ec2.Peer.ipv4(vpc.vpcCidrBlock),
+      ec2.Port.tcp(3306),
+    );
+    
+    // 残り：下記を参考に EC2 のセキュリティグループを作成する．
+    // https://dev.classmethod.jp/articles/sales-rds-ec2-session/
+    //
+    // - インバウンドルール
+    //   - タイプ: MYSQL/Aurora
+    //   - プロトコル: TCP
+    //   - ポート範囲: 3306
+    //   - ソース: カスタム, AwsSsmMysqlStack/ec2_ssm (sg-xxxxxxxxxxxxxxxxxx)
     
     //
   }

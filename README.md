@@ -35,8 +35,22 @@ npx cdk deploy
        --filters "Name=tag:Name,Values=AwsSsmMysqlStack/ec2_ssm" \
        --query "Reservations[].Instances[?State.Name=='running'].InstanceId[]" \
        --output text)
-   ssh -i ~/.ssh/ec2/id_ed25519 admis@$EC2_INSTANCE_ID -L 3306:localhost:3306
+   ssh -i ~/.ssh/ec2/id_ed25519 admis@$EC2_INSTANCE_ID -L 3306:xxxxxxxx.xxxxxxxx.ap-northeast-1.rds.amazonaws.com:3306
    ```
+
+### install [MySQL Workbench](https://www.mysql.com/jp/products/workbench/)
+1. [download](https://www.mysql.com/jp/products/workbench/)
+2. install
+3. make connection
+   1. run `MySQL Workbench`
+   2. clock `+ (plus)` button which is right side of `MySQL Connections`
+4. Setup New Connection
+   - Connection Name: testdb (Any name is OK)
+   - Hostname: localhost
+   - Port: 3306
+   - Username: <see `get DB password` section>
+   - Password: <see `get DB password` section> (click `Store in Keychain...` and save)
+
 
 ## memo
 ### init project
